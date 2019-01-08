@@ -1,0 +1,9 @@
+services:
+	-
+		class: GW\PHPStan\GwValues\ArrayValueDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueToArrayDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension

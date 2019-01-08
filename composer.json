@@ -1,0 +1,26 @@
+{
+    "name": "gowork/phpstan-gw-values",
+    "description": "GW Values extensions for PHPStan",
+    "license": ["MIT"],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "~7.1",
+        "phpstan/phpstan": "^0.10",
+        "nikic/php-parser": "^4.0"
+    },
+    "require-dev": {
+        "gowork/values": "^0.1",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GW\\PHPStan\\GwValues\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\GW\\PHPStan\\GwValues\\": "tests/"
+        }
+    }
+}
