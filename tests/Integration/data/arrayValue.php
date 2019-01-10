@@ -17,5 +17,28 @@ final class Example
         )->toArray();
 
         $n = $strings[0] + 2;
+
+        $array->map(
+            function (string $s): int {
+                return 2;
+            }
+        );
+
+        $array
+            ->map(
+                function (int $s): int {
+                    return 2;
+                }
+            )
+            ->map(
+                function (int $n): string {
+                    return "n{$n}";
+                }
+            )
+            ->map(
+                function (int $s): int {
+                    return 2;
+                }
+            );
     }
 }

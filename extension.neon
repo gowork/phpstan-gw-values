@@ -4,6 +4,18 @@ services:
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
+		class: GW\PHPStan\GwValues\ArrayValueMapDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
 		class: GW\PHPStan\GwValues\ArrayValueToArrayDynamicReturn
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\WrapDynamicReturn
+		tags:
+			- phpstan.broker.dynamicStaticMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueCallbackRule
+		tags:
+			- phpstan.rules.rule

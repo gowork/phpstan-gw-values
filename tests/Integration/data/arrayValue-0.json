@@ -1,0 +1,7 @@
+[
+    {
+        "message": "Parameter #1 $s of method map callback expects int, string given.",
+        "line": 27,
+        "ignorable": true
+    }
+]
