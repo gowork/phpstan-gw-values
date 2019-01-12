@@ -12,6 +12,10 @@ services:
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
+		class: GW\PHPStan\GwValues\ArrayValueChunkDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
 		class: GW\PHPStan\GwValues\WrapDynamicReturn
 		tags:
 			- phpstan.broker.dynamicStaticMethodReturnTypeExtension

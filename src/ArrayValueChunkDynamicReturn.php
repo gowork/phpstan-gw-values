@@ -6,13 +6,13 @@ use GW\Value\ArrayValue;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Type\CallableType;
-use PHPStan\Type\ClosureType;
+use PHPStan\Type\ArrayType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
+use PHPStan\Type\IntegerType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 
-final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtension
+final class ArrayValueChunkDynamicReturn implements DynamicMethodReturnTypeExtension
 {
     public function getClass(): string
     {
@@ -21,7 +21,7 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return $methodReflection->getName() === 'map';
+        return $methodReflection->getName() === 'chunk';
     }
 
     public function getTypeFromMethodCall(
@@ -36,17 +36,7 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
             return new ArrayValueType(new MixedType());
         }
 
-        $innerType = new MixedType();
-        $firstAttribute = $methodCall->args[0]->value;
-        $callableType = $scope->getType($firstAttribute);
-
-        if ($callableType instanceof ClosureType) {
-            $innerType = $callableType->getReturnType();
-        }
-
-        if ($callableType instanceof CallableType) {
-            $innerType = $callableType->getReturnType() ?? new MixedType();
-        }
+        $innerType = new ArrayType(new IntegerType(), $valueType->innerType());
 
         return new ArrayValueType($innerType);
     }
