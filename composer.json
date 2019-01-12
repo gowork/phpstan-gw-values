@@ -10,7 +10,7 @@
         "nikic/php-parser": "^4.0"
     },
     "require-dev": {
-        "gowork/values": "^0.1",
+        "gowork/values": "^0.2",
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {

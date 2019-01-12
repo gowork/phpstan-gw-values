@@ -6,12 +6,11 @@ use GW\Value\ArrayValue;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Type\ArrayType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
-use PHPStan\Type\IntegerType;
 use PHPStan\Type\Type;
+use PHPStan\Type\UnionType;
 
-final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExtension
+final class ArrayValueJoinDynamicReturn implements DynamicMethodReturnTypeExtension
 {
     public function getClass(): string
     {
@@ -20,7 +19,7 @@ final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExt
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return \in_array($methodReflection->getName(), ['toArray', 'getIterator'], true);
+        return $methodReflection->getName() === 'join';
     }
 
     public function getTypeFromMethodCall(
@@ -31,6 +30,11 @@ final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExt
         /** @var ArrayValueType $type */
         $type = $scope->getType($methodCall->var);
 
-        return new ArrayType(new IntegerType(), $type->innerType());
+        $parameter = $methodCall->args[0]->value;
+
+        /** @var ArrayValueType $parameterType */
+        $parameterType = $scope->getType($parameter);
+
+        return new ArrayValueType(new UnionType([$type->innerType(), $parameterType->innerType()]));
     }
 }

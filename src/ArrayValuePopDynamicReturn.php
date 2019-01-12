@@ -6,12 +6,12 @@ use GW\Value\ArrayValue;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Type\ArrayType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
-use PHPStan\Type\IntegerType;
+use PHPStan\Type\NullType;
 use PHPStan\Type\Type;
+use PHPStan\Type\UnionType;
 
-final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExtension
+final class ArrayValuePopDynamicReturn implements DynamicMethodReturnTypeExtension
 {
     public function getClass(): string
     {
@@ -20,7 +20,7 @@ final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExt
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return \in_array($methodReflection->getName(), ['toArray', 'getIterator'], true);
+        return \in_array($methodReflection->getName(), ['pop', 'offsetGet', 'first', 'last', 'find', 'findLast'], true);
     }
 
     public function getTypeFromMethodCall(
@@ -30,7 +30,12 @@ final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExt
     ): Type {
         /** @var ArrayValueType $type */
         $type = $scope->getType($methodCall->var);
+        $innerType = $type->innerType();
 
-        return new ArrayType(new IntegerType(), $type->innerType());
+        if ($innerType instanceof UnionType) {
+            return new UnionType(\array_merge([new NullType()], $innerType->getTypes()));
+        }
+
+        return new UnionType([new NullType(), $innerType]);
     }
 }

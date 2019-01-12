@@ -12,7 +12,7 @@ use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 
-final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtension
+final class ArrayValueReduceDynamicReturn implements DynamicMethodReturnTypeExtension
 {
     public function getClass(): string
     {
@@ -21,7 +21,7 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return \in_array($methodReflection->getName(), ['map', 'flatMap'], true);
+        return $methodReflection->getName() === 'reduce';
     }
 
     public function getTypeFromMethodCall(
@@ -29,25 +29,24 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayValueType $valueType */
-        $valueType = $scope->getType($methodCall->var);
+        /** @var ArrayValueType $type */
+        $type = $scope->getType($methodCall->var);
 
         if (\count($methodCall->args) === 0) {
-            return new ArrayValueType(new MixedType());
+            return new MixedType();
         }
 
-        $innerType = new MixedType();
         $firstAttribute = $methodCall->args[0]->value;
         $callableType = $scope->getType($firstAttribute);
 
         if ($callableType instanceof ClosureType) {
-            $innerType = $callableType->getReturnType();
+            return $callableType->getReturnType();
         }
 
         if ($callableType instanceof CallableType) {
-            $innerType = $callableType->getReturnType() ?? new MixedType();
+            return $callableType->getReturnType() ?? new MixedType();
         }
 
-        return new ArrayValueType($innerType);
+        return $type->innerType();
     }
 }

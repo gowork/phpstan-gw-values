@@ -12,6 +12,18 @@ services:
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
+		class: GW\PHPStan\GwValues\ArrayValuePopDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueJoinDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueReduceDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
 		class: GW\PHPStan\GwValues\ArrayValueChunkDynamicReturn
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
@@ -21,5 +33,9 @@ services:
 			- phpstan.broker.dynamicStaticMethodReturnTypeExtension
 	-
 		class: GW\PHPStan\GwValues\ArrayValueCallbackRule
+		tags:
+			- phpstan.rules.rule
+	-
+		class: GW\PHPStan\GwValues\ArrayValuePushRule
 		tags:
 			- phpstan.rules.rule

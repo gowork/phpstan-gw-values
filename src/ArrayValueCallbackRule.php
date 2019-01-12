@@ -34,8 +34,18 @@ final class ArrayValueCallbackRule implements Rule
             return [];
         }
 
-        if (!\in_array($methodCall->name->name, ['map', 'filter', 'reduce'], true)) {
+        if (!\in_array(
+            $methodCall->name->name,
+            ['map', 'filter', 'reduce', 'each', 'sort', 'unique', 'any', 'every'],
+            true
+        )) {
             return [];
+        }
+
+        $numberOfParameters = 1;
+
+        if (\in_array($methodCall->name->name, ['unique', 'sort'], true)) {
+            $numberOfParameters = 2;
         }
 
         $valueType = $scope->getType($methodCall->var);
@@ -44,36 +54,40 @@ final class ArrayValueCallbackRule implements Rule
             return [];
         }
 
-        $firstAttribute = $methodCall->args[0]->value;
-        $callableType = $scope->getType($firstAttribute);
+        $errors = [];
 
-        if ($callableType instanceof ClosureType) {
-            /** @var NativeParameterReflection[] $parameters */
-            $parameters = $callableType->getParameters();
-            $parameter = $parameters[0];
-            $parameterType = $parameters[0]->getType();
-            $argumentValueType = $valueType->innerType();
+        for ($parameterIndex = 0; $parameterIndex < $numberOfParameters; $parameterIndex++) {
+            $attribute = $methodCall->args[0]->value;
+            $callableType = $scope->getType($attribute);
 
-            $accepts = $this->ruleLevelHelper->accepts(
-                $parameterType,
-                $argumentValueType,
-                $scope->isDeclareStrictTypes()
-            );
+            if ($callableType instanceof ClosureType) {
+                /** @var NativeParameterReflection[] $parameters */
+                $parameters = $callableType->getParameters();
+                $parameter = $parameters[$parameterIndex];
+                $parameterType = $parameters[$parameterIndex]->getType();
+                $argumentValueType = $valueType->innerType();
 
-            if (!$accepts) {
-                return [
-                    \sprintf(
-                        'Parameter #1 %s of method ' . $methodCall->name->name . ' callback expects %s, %s given.',
+                $accepts = $this->ruleLevelHelper->accepts(
+                    $parameterType,
+                    $argumentValueType,
+                    $scope->isDeclareStrictTypes()
+                );
+
+                if (!$accepts) {
+                    $errors[] = \sprintf(
+                        'Parameter #%d %s of method ' . $methodCall->name->name . ' callback expects %s, %s given.',
+                        $parameterIndex + 1,
                         sprintf('%s$%s', $parameter->isVariadic() ? '...' : '', $parameter->getName()),
                         $parameterType->describe(VerbosityLevel::typeOnly()),
                         $argumentValueType->describe(
-                            $parameterType->isCallable()->yes() ? VerbosityLevel::value() : VerbosityLevel::typeOnly()
+                            $parameterType->isCallable()->yes() ? VerbosityLevel::value()
+                                : VerbosityLevel::typeOnly()
                         )
-                    ),
-                ];
+                    );
+                }
             }
         }
 
-        return [];
+        return $errors;
     }
 }

@@ -8,23 +8,26 @@ final class Example
 {
     public function test()
     {
-        $array = Wrap::array([1, 3, 4]);
+        $ints = Wrap::array([1, 3, 4]);
 
-        $strings = $array->map(
+        $strings = $ints->map(
             function (int $n): string {
                 return "n{$n}";
             }
-        )->toArray();
+        );
 
-        $n = $strings[0] + 2;
+        chr($ints->first());
+        chr($strings->first());
 
-        $array->map(
+        $n = $strings->toArray()[0] + 2;
+
+        $ints->map(
             function (string $s): int {
                 return 2;
             }
         );
 
-        $array
+        $ints
             ->map(
                 function (int $s): int {
                     return 2;
@@ -40,5 +43,15 @@ final class Example
                     return 2;
                 }
             );
+
+        $this->acceptingArrayOfInts($ints->chunk(2)->toArray());
+        $this->acceptingArrayOfInts($ints->chunk(2)->toArray()[0]);
+    }
+
+    /**
+     * @param int[] $ints
+     */
+    private function acceptingArrayOfInts(array $ints): void
+    {
     }
 }

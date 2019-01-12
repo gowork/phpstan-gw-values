@@ -6,10 +6,7 @@ use GW\Value\ArrayValue;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Type\CallableType;
-use PHPStan\Type\ClosureType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
-use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 
 final class ArrayValueDynamicReturn implements DynamicMethodReturnTypeExtension
@@ -21,7 +18,7 @@ final class ArrayValueDynamicReturn implements DynamicMethodReturnTypeExtension
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        if (\in_array($methodReflection->getName(), ['map', 'toArray'], true)) {
+        if (\in_array($methodReflection->getName(), ['map', 'shuffle'], true)) {
             return false;
         }
 
