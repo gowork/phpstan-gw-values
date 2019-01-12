@@ -34,9 +34,15 @@ final class ArrayValueCallbackRule implements Rule
             return [];
         }
 
+        $identifier = $methodCall->name;
+
+        if (!$identifier instanceof Node\Identifier) {
+            return [];
+        }
+
         if (!\in_array(
-            $methodCall->name->name,
-            ['map', 'filter', 'reduce', 'each', 'sort', 'unique', 'any', 'every'],
+            $identifier->name,
+            ['map', 'filter', 'each', 'sort', 'unique', 'any', 'every'],
             true
         )) {
             return [];
@@ -48,7 +54,7 @@ final class ArrayValueCallbackRule implements Rule
             $numberOfParameters = 2;
         }
 
-        $valueType = $scope->getType($methodCall->var);
+        $valueType = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
 
         if (!$valueType instanceof ArrayValueType) {
             return [];
@@ -57,7 +63,11 @@ final class ArrayValueCallbackRule implements Rule
         $errors = [];
 
         for ($parameterIndex = 0; $parameterIndex < $numberOfParameters; $parameterIndex++) {
-            $attribute = $methodCall->args[0]->value;
+            if (!isset($methodCall->args[$parameterIndex])) {
+                continue;
+            }
+
+            $attribute = $methodCall->args[$parameterIndex]->value;
             $callableType = $scope->getType($attribute);
 
             if ($callableType instanceof ClosureType) {

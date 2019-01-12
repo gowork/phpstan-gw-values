@@ -1,0 +1,7 @@
+[
+    {
+        "message": "Parameter #1 $x of method map callback expects int, tests\\GW\\PHPStan\\GwValues\\Integration\\Label given.",
+        "line": 23,
+        "ignorable": true
+    }
+]

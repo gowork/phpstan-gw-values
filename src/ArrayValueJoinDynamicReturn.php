@@ -7,6 +7,7 @@ use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
+use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 
@@ -27,14 +28,15 @@ final class ArrayValueJoinDynamicReturn implements DynamicMethodReturnTypeExtens
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayValueType $type */
-        $type = $scope->getType($methodCall->var);
+        $type = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
 
         $parameter = $methodCall->args[0]->value;
 
         /** @var ArrayValueType $parameterType */
         $parameterType = $scope->getType($parameter);
 
-        return new ArrayValueType(new UnionType([$type->innerType(), $parameterType->innerType()]));
+        return new ArrayValueType(
+            new UnionType([$type ? $type->innerType() : new MixedType(), $parameterType->innerType()])
+        );
     }
 }

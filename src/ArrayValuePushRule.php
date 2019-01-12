@@ -36,7 +36,7 @@ final class ArrayValuePushRule implements Rule
             return [];
         }
 
-        $valueType = $scope->getType($methodCall->var);
+        $valueType = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
 
         if (!$valueType instanceof ArrayValueType) {
             return [];

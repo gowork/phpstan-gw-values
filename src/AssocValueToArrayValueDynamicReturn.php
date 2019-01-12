@@ -2,25 +2,24 @@
 
 namespace GW\PHPStan\GwValues;
 
-use GW\Value\ArrayValue;
+use GW\Value\AssocValue;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
-use PHPStan\Type\IntegerType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 
-final class ArrayValueToAssocValueDynamicReturn implements DynamicMethodReturnTypeExtension
+final class AssocValueToArrayValueDynamicReturn implements DynamicMethodReturnTypeExtension
 {
     public function getClass(): string
     {
-        return ArrayValue::class;
+        return AssocValue::class;
     }
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return $methodReflection->getName() === 'toAssocValue';
+        return $methodReflection->getName() === 'values';
     }
 
     public function getTypeFromMethodCall(
@@ -28,8 +27,12 @@ final class ArrayValueToAssocValueDynamicReturn implements DynamicMethodReturnTy
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        $type = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
+        $type = $scope->getType($methodCall->var);
 
-        return new AssocValueType(new IntegerType(), $type ? $type->innerType() : new MixedType());
+        if ($type instanceof AssocValueType) {
+            return new ArrayValueType($type->innerType());
+        }
+
+        return new ArrayValueType(new MixedType());
     }
 }

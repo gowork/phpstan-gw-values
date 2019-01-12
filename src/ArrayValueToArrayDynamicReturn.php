@@ -9,7 +9,10 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\IntegerType;
+use PHPStan\Type\IntersectionType;
+use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
+use PHPStan\Type\UnionType;
 
 final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExtension
 {
@@ -28,9 +31,27 @@ final class ArrayValueToArrayDynamicReturn implements DynamicMethodReturnTypeExt
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayValueType $type */
         $type = $scope->getType($methodCall->var);
 
-        return new ArrayType(new IntegerType(), $type->innerType());
+        return $this->fromType($type) ?? new ArrayType(new IntegerType(), new MixedType());
+    }
+
+    private function fromType(Type $type): ?ArrayType
+    {
+        if ($type instanceof ArrayValueType) {
+            return new ArrayType(new IntegerType(), $type->innerType());
+        }
+
+        if ($type instanceof IntersectionType || $type instanceof UnionType) {
+            foreach ($type->getTypes() as $subType) {
+                $try = $this->fromType($subType);
+
+                if ($try) {
+                    return $try;
+                }
+            }
+        }
+
+        return null;
     }
 }

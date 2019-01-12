@@ -36,6 +36,10 @@ services:
 		tags:
 			- phpstan.broker.dynamicMethodReturnTypeExtension
 	-
+		class: GW\PHPStan\GwValues\AssocValueToArrayValueDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
 		class: GW\PHPStan\GwValues\WrapDynamicReturn
 		tags:
 			- phpstan.broker.dynamicStaticMethodReturnTypeExtension
@@ -45,5 +49,9 @@ services:
 			- phpstan.rules.rule
 	-
 		class: GW\PHPStan\GwValues\ArrayValuePushRule
+		tags:
+			- phpstan.rules.rule
+	-
+		class: GW\PHPStan\GwValues\ArrayReduceCallbackRule
 		tags:
 			- phpstan.rules.rule

@@ -29,9 +29,6 @@ final class ArrayValueReduceDynamicReturn implements DynamicMethodReturnTypeExte
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayValueType $type */
-        $type = $scope->getType($methodCall->var);
-
         if (\count($methodCall->args) === 0) {
             return new MixedType();
         }
@@ -47,6 +44,12 @@ final class ArrayValueReduceDynamicReturn implements DynamicMethodReturnTypeExte
             return $callableType->getReturnType() ?? new MixedType();
         }
 
-        return $type->innerType();
+        $type = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
+
+        if ($type) {
+            return $type->innerType();
+        }
+
+        return new MixedType();
     }
 }

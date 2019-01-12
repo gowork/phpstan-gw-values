@@ -12,9 +12,9 @@ final class ArrayValueType extends ObjectType
     /** @var Type */
     private $innerType;
 
-    public function __construct(Type $innerType)
+    public function __construct(Type $innerType, string $baseClass = ArrayValue::class)
     {
-        parent::__construct(ArrayValue::class);
+        parent::__construct($baseClass);
         $this->innerType = $innerType;
     }
 

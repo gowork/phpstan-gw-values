@@ -29,14 +29,13 @@ final class ArrayValueChunkDynamicReturn implements DynamicMethodReturnTypeExten
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayValueType $valueType */
-        $valueType = $scope->getType($methodCall->var);
+        $valueType = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
 
         if (\count($methodCall->args) === 0) {
             return new ArrayValueType(new MixedType());
         }
 
-        $innerType = new ArrayType(new IntegerType(), $valueType->innerType());
+        $innerType = new ArrayType(new IntegerType(), $valueType ? $valueType->innerType() : new MixedType());
 
         return new ArrayValueType($innerType);
     }

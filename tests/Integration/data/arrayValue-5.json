@@ -5,7 +5,7 @@
         "ignorable": true
     },
     {
-        "message": "Parameter #1 $ints of method tests\\GW\\PHPStan\\GwValues\\Integration\\Example::acceptingArrayOfInts() expects array<int>, array<int, array<int, int>> given.",
+        "message": "Parameter #1 $ints of method tests\\GW\\PHPStan\\GwValues\\Integration\\arrayValue::acceptingArrayOfInts() expects array<int>, array<int, array<int, int>> given.",
         "line": 47,
         "ignorable": true
     }

@@ -10,6 +10,9 @@ final class ArrayValueIntegrationTest extends LevelsTestCase
     {
         return [
             ['arrayValue'],
+            ['docBlocks'],
+            ['arrayFromAssoc'],
+            ['stringsValue'],
         ];
     }
 

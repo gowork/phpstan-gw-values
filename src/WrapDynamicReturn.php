@@ -8,6 +8,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
+use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 
 final class WrapDynamicReturn implements DynamicStaticMethodReturnTypeExtension
@@ -27,9 +28,13 @@ final class WrapDynamicReturn implements DynamicStaticMethodReturnTypeExtension
         StaticCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayType $innerType */
-        $innerType = $scope->getType($methodCall->args[0]->value);
+        $passedType = $scope->getType($methodCall->args[0]->value);
+        $innerType = new MixedType();
 
-        return new ArrayValueType($innerType->getItemType());
+        if ($passedType instanceof ArrayType) {
+            $innerType = $passedType->getItemType();
+        }
+
+        return new ArrayValueType($innerType);
     }
 }

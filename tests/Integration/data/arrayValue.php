@@ -4,7 +4,7 @@ namespace tests\GW\PHPStan\GwValues\Integration;
 
 use GW\Value\Wrap;
 
-final class Example
+final class arrayValue
 {
     public function test()
     {
@@ -46,6 +46,8 @@ final class Example
 
         $this->acceptingArrayOfInts($ints->chunk(2)->toArray());
         $this->acceptingArrayOfInts($ints->chunk(2)->toArray()[0]);
+
+        $strings->unique();
     }
 
     /**

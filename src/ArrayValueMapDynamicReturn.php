@@ -6,6 +6,8 @@ use GW\Value\ArrayValue;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\ShouldNotHappenException;
+use PHPStan\Type\ArrayType;
 use PHPStan\Type\CallableType;
 use PHPStan\Type\ClosureType;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
@@ -21,7 +23,16 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return \in_array($methodReflection->getName(), ['map', 'flatMap'], true);
+        return
+            ($methodReflection->getDeclaringClass()->getName() === ArrayValue::class
+                || $methodReflection->getDeclaringClass()->isSubclassOf(
+                    ArrayValue::class
+                ))
+            && \in_array(
+                $methodReflection->getName(),
+                ['map', 'flatMap'],
+                true
+            );
     }
 
     public function getTypeFromMethodCall(
@@ -29,8 +40,7 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        /** @var ArrayValueType $valueType */
-        $valueType = $scope->getType($methodCall->var);
+        $valueType = TypeHelper::searchArrayValueType($scope->getType($methodCall->var));
 
         if (\count($methodCall->args) === 0) {
             return new ArrayValueType(new MixedType());
@@ -48,6 +58,14 @@ final class ArrayValueMapDynamicReturn implements DynamicMethodReturnTypeExtensi
             $innerType = $callableType->getReturnType() ?? new MixedType();
         }
 
-        return new ArrayValueType($innerType);
+        if ($methodReflection->getName() === 'flatMap' && !$innerType instanceof MixedType) {
+            if (!$innerType instanceof ArrayType) {
+                throw new ShouldNotHappenException('flatMap callback must return array');
+            }
+
+            $innerType = $innerType->getItemType();
+        }
+
+        return new ArrayValueType($innerType, $methodReflection->getDeclaringClass()->getName());
     }
 }
