@@ -1,0 +1,7 @@
+[
+    {
+        "message": "Parameter #1 $ascii of function chr expects int, int|null given.",
+        "line": 19,
+        "ignorable": true
+    }
+]

@@ -1,0 +1,57 @@
+services:
+	-
+		class: GW\PHPStan\GwValues\ArrayValueDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueMapDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueToArrayDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValuePopDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueJoinDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueReduceDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueToAssocValueDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueToStringValueDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueChunkDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\AssocValueToArrayValueDynamicReturn
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\WrapDynamicReturn
+		tags:
+			- phpstan.broker.dynamicStaticMethodReturnTypeExtension
+	-
+		class: GW\PHPStan\GwValues\ArrayValueCallbackRule
+		tags:
+			- phpstan.rules.rule
+	-
+		class: GW\PHPStan\GwValues\ArrayValuePushRule
+		tags:
+			- phpstan.rules.rule
+	-
+		class: GW\PHPStan\GwValues\ArrayReduceCallbackRule
+		tags:
+			- phpstan.rules.rule

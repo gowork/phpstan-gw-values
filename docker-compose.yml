@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  develop:
+    build: .
+    image: values_console
+    volumes:
+      - ./:/home/gowork/current
+      - ~/.ssh/id_rsa:/home/gowork/.ssh/id_rsa
+      - ~/.ssh/id_rsa.pub:/home/gowork/.ssh/id_rsa.pub
+      - ./zsh_history:/home/gowork/.zsh_history
+      - ~/.gitconfig:/home/gowork/.gitconfig
+      - ~/.ssh/known_hosts:/home/gowork/.ssh/known_hosts

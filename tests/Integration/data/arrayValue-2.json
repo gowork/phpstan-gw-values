@@ -1,0 +1,7 @@
+[
+    {
+        "message": "Binary operation \"+\" between string and 2 results in an error.",
+        "line": 22,
+        "ignorable": true
+    }
+]
