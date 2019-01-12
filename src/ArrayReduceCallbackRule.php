@@ -34,6 +34,12 @@ final class ArrayReduceCallbackRule implements Rule
             return [];
         }
 
+        $identifier = $methodCall->name;
+
+        if (!$identifier instanceof Node\Identifier) {
+            return [];
+        }
+
         if ($methodCall->name->name !== 'reduce') {
             return [];
         }

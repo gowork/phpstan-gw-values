@@ -32,6 +32,12 @@ final class ArrayValuePushRule implements Rule
             return [];
         }
 
+        $identifier = $methodCall->name;
+
+        if (!$identifier instanceof Node\Identifier) {
+            return [];
+        }
+
         if (!\in_array($methodCall->name->name, ['push', 'unshift'], true)) {
             return [];
         }
